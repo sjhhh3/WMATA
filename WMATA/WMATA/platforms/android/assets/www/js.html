@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSSample</title>
+    <script type="text/javascript" src="scripts/jquery.js"></script>
+    <style>        
+        #map{
+        height: 300px;
+        width: 100%;
+        margin-top:60px;
+        display:block;
+       }
+    </style>
+</head>
+<body>
+    <div class="map" id="map"><h3>My Google Maps Demo</h3></div>
+    <div class="Lat" id="Lat">M</div>
+<script type="text/javascript">
+    var IDs = new Array();
+    var lats = new Array();
+    var lngs = new Array();
+    var headings = new Array();
+    var numbers;
+
+        var params = {
+            "api_key": "a05836e2c67a486d9dbcf0b206a266f4",
+             //Request parameters
+            "RouteID": "80",
+            "Lat": "{number}",
+            "Lon": "{number}",
+            "Radius": "{number}",
+        };
+
+        data = $.ajax({
+            url: "https://api.wmata.com/Bus.svc/json/jBusPositions?" + $.param(params),
+            type: "GET",
+            async: false
+        })
+        .done(function (data, textStatus, jqXHR) {
+            //alert("success");
+            //document.getElementById("Lat").innerHTML = data.BusPositions[1].Lat + " " + data.BusPositions[1].Lon;
+            if (data.BusPositions.length == 0) {
+                alert("Sorry there's no bus for now or WMATA data is not available currently.");
+            }
+            console.log(data.BusPositions)
+            for (var i = 0; i < data.BusPositions.length; i++){
+                IDs.push(data.BusPositions[i].DirectionText);
+                lats.push(data.BusPositions[i].Lat);
+                lngs.push(data.BusPositions[i].Lon);
+                headings.push(data.BusPositions[i].TripHeadsign);
+            }
+        })
+        .fail(function() {
+            alert("WMATA Data Disconnected");
+        });
+
+</script>
+
+    <script>
+        console.log(IDs);
+        console.log(lats);
+        console.log(lngs);
+        console.log(parseInt(IDs.length/2));
+        function initMap() {
+            //var uluru = { lat: -25.363, lng: 131.044 };
+            //var uluru2 = { lat: -25.373, lng: 133.044 };
+            var image1 = 'images/bus1.png';
+            var image2 = 'images/bus2.png'
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14,
+                //center: { lat: -25.363, lng: 131.044 }
+                center: { lat: lats[parseInt(IDs.length / 2)], lng: lngs[parseInt(IDs.length / 2)] }
+            });
+
+            for (var i = 0; i < IDs.length; i++) {
+                if (IDs[i] == "NORTH" || IDs[i] == "EAST") {
+                    var marker = new google.maps.Marker({
+                        position: { lat: lats[i], lng: lngs[i] },
+                        map: map,
+                        icon: image1,
+                        title: headings[i],
+                        direction: IDs[i]
+                    });
+                }
+                else {
+                    var marker = new google.maps.Marker({
+                        position: { lat: lats[i], lng: lngs[i] },
+                        map: map,
+                        icon: image2,
+                        title: headings[i],
+                        direction: IDs[i]
+                    });
+                }
+                message(marker, marker.title, marker.direction, infowindow);
+            }
+
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    var marker = new google.maps.Marker({
+                        position: pos,
+                        map: map,
+                        title: "your location",
+                    });
+                        map.setCenter(pos);
+                }, function () {
+                    handleLocationError();
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                alert("Please allow your location");
+            }
+        }
+        function handleLocationError() {
+            alert("Please allow your location");
+        }
+
+
+        var infowindow = new google.maps.InfoWindow({
+            content: ''
+        });
+        function message(marker, destination, direction, infowindow) {
+
+            marker.addListener('click', function () {
+                infowindow.open(marker.get('map'), marker);
+                infowindow.setContent('To ' + destination + ',' + ' ' + direction);
+                document.getElementById("Lat").innerHTML = destination;
+            });
+        }
+
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCoXGJE3W4zc5zgPMpKOAV4EhW4NzrofU&callback=initMap">
+
+    </script>
+
+</body>
+</html>

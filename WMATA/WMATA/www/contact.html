@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/search.css">
+    <script type="text/javascript" src="scripts/jquery.js"></script>
+    <title>Search</title>
+
+ <style>
+         .container{
+             width:100%;
+             margin-top: 70px;
+             height:530px;
+             text-align:center;
+             font-size:20px;
+         }
+     footer {
+            text-align:center;
+             font-size:20px;
+     }
+     img{
+     animation:bus linear 3s infinite;
+     }
+     @keyframes bus {
+         from {transform : translateX(-330px);}
+         to {transform : translateX(430px);}
+     }
+ </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="search.html">WMATA</a>
+
+        <form class="form-inline mx-sm-2" id="searchform" onkeydown="if(event.keyCode==13){return false;}">
+            <input class="form-control mx-2" type="text" name="Text" style="width: 100px;" placeholder="Search">
+        </form>
+        <button class="glyphicon glyphicon-search my-2 my-sm-0" id="search" style="border:0;"></button>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Content" aria-controls="navcontent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="Content">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="search">Home Search<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="map.html">Near By</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section >
+        <div class="container"><strong><h2>Thank you for using our WMATA APP.</h2></strong><br>
+        If you have any problem please contact us.<br><br>
+        Jiahui Sun: 22sun@cua.edu<br>
+        Li-Tse Hsieh:84hsieh@cua.edu<br><br>
+            <img src="images/bus.png" style= "height:100px">
+        </div>
+
+    </section>
+    <footer>
+    Copyright © 2017 by CUA
+</footer>
+
+    <script>
+       $(document).ready(function () {
+           $("#search").click(function () {
+               data = $("#searchform").serialize();
+               arr = data.split("=");
+               var newsearch = arr[1];
+               window.location.replace("map.html?" + newsearch);
+           });
+       });
+    </script>
+
+    <script type="text/javascript" src="scripts/popper.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap.js"></script>
+
+</body>
+</html>
